@@ -1,0 +1,29 @@
+From 1b4f9653d05f8aab18392c0af6d1033fb5c9d246 Mon Sep 17 00:00:00 2001
+From: cjybyjk <cjybyjk@zjnu.edu.cn>
+Date: Fri, 12 Aug 2022 23:26:20 +0800
+Subject: [PATCH 3/5] base: Settings: add Secure.STATUS_BAR_SHOW_LYRIC to
+ System.MOVED_TO_SECURE for compatibility
+
+Signed-off-by: cjybyjk <cjybyjk@zjnu.edu.cn>
+Change-Id: I57fce8adad97e89d46791835907de8906dd2df5f
+---
+ core/java/android/provider/Settings.java | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index d7e4ad40a4de..7ba4789355d7 100644
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -3632,6 +3632,9 @@ public final class Settings {
+ 
+             // At one time in System, then Global, but now back in Secure
+             MOVED_TO_SECURE.add(Secure.INSTALL_NON_MARKET_APPS);
++
++            // Status bar lyric
++            MOVED_TO_SECURE.add(Secure.STATUS_BAR_SHOW_LYRIC);
+         }
+ 
+         @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
+-- 
+2.32.0.windows.2
+

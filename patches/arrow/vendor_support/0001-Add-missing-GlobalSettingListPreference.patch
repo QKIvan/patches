@@ -1,0 +1,93 @@
+From a40d43481ed4103d8b05d5add367b8fc8b73574b Mon Sep 17 00:00:00 2001
+From: LibXZR <i@xzr.moe>
+Date: Tue, 25 Jan 2022 10:52:50 +0800
+Subject: [PATCH 1/2] Add missing GlobalSettingListPreference
+
+We have ListPreference for system and secure settings, left out global.
+
+Change-Id: Ibd19a1b0d09fe87819f89f606b6c0b121e9af394
+Signed-off-by: LibXZR <i@xzr.moe>
+---
+ .../GlobalSettingListPreference.java          | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 src/com/arrow/support/preferences/GlobalSettingListPreference.java
+
+diff --git a/src/com/arrow/support/preferences/GlobalSettingListPreference.java b/src/com/arrow/support/preferences/GlobalSettingListPreference.java
+new file mode 100644
+index 0000000..aee71ea
+--- /dev/null
++++ b/src/com/arrow/support/preferences/GlobalSettingListPreference.java
+@@ -0,0 +1,70 @@
++/*
++ * Copyright (C) 2017 AICP
++ * Copyright (C) 2022 Project Kaleidoscope
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.arrow.support.preferences;
++
++import android.content.Context;
++import androidx.preference.ListPreference;
++import android.text.TextUtils;
++import android.util.AttributeSet;
++import android.provider.Settings;
++
++public class GlobalSettingListPreference extends ListPreference {
++    private boolean mAutoSummary = false;
++
++    public GlobalSettingListPreference(Context context, AttributeSet attrs, int defStyle) {
++        super(context, attrs, defStyle);
++        setPreferenceDataStore(new GlobalSettingsStore(context.getContentResolver()));
++    }
++
++    public GlobalSettingListPreference(Context context, AttributeSet attrs) {
++        super(context, attrs);
++        setPreferenceDataStore(new GlobalSettingsStore(context.getContentResolver()));
++    }
++
++    public GlobalSettingListPreference(Context context) {
++        super(context);
++        setPreferenceDataStore(new GlobalSettingsStore(context.getContentResolver()));
++    }
++
++    @Override
++    public void setValue(String value) {
++        super.setValue(value);
++        if (mAutoSummary || TextUtils.isEmpty(getSummary())) {
++            setSummary(getEntry(), true);
++        }
++    }
++
++    @Override
++    public void setSummary(CharSequence summary) {
++        setSummary(summary, false);
++    }
++
++    private void setSummary(CharSequence summary, boolean autoSummary) {
++        mAutoSummary = autoSummary;
++        super.setSummary(summary);
++    }
++
++    @Override
++    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
++        // This is what default ListPreference implementation is doing without respecting
++        // real default value:
++        //setValue(restoreValue ? getPersistedString(mValue) : (String) defaultValue);
++        // Instead, we better do
++        setValue(restoreValue ? getPersistedString((String) defaultValue) : (String) defaultValue);
++    }
++}
+-- 
+2.25.1
+

@@ -1,0 +1,28 @@
+From e09093b478b5d5ba9fdcd6677afbf122fb2ae4ff Mon Sep 17 00:00:00 2001
+From: AmeChanRain <downloadbot007@gmail.com>
+Date: Sun, 19 Feb 2023 10:38:52 +0000
+Subject: [PATCH 4/5] SystemUI: Update lyric ticker on post notification
+
+Co-authored-by: LynnrinChan <wuxiaofei31@gmail.com>
+---
+ .../statusbar/notification/collection/NotifCollection.java    | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/collection/NotifCollection.java b/packages/SystemUI/src/com/android/systemui/statusbar/notification/collection/NotifCollection.java
+index df35c9e6832a..89fdb01ead8b 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/notification/collection/NotifCollection.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/notification/collection/NotifCollection.java
+@@ -498,6 +498,10 @@ public class NotifCollection implements Dumpable, PipelineDumpable {
+ 
+             mLogger.logNotifUpdated(entry);
+             mEventQueue.add(new EntryUpdatedEvent(entry, true /* fromSystem */));
++            // update ticker only, LyricController will handle it
++            if ((entry.getSbn().getNotification().flags & Notification.FLAG_ONLY_UPDATE_TICKER) != 0) {
++                return;
++            }
+         }
+     }
+ 
+-- 
+2.32.0.windows.2
+
